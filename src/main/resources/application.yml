@@ -1,0 +1,32 @@
+server:
+  port: 9093
+
+spring:
+  main:
+    web-application-type: reactive
+  application:
+    name: API-Gateway
+  cloud:
+    gateway:
+      routes:
+        - id: User-Service
+          uri: lb://User-Service              # Here 'lb' is load-balancer
+          predicates:                         #  we will hit this path from the client side then API Gateway
+            - Path=/user/**                   # will automatically configure the request to user-service.
+        - id: Hotel-Service                   # url we will hit - http://localhost:9093/user/userWithRatingsUsingFeign/2
+          uri: lb://Hotel-Service              # Here 'lb' is load-balancer
+          predicates:
+            - Path=/hotel/**
+        - id: Rating-Service
+          uri: lb://Rating-Service              # Here 'lb' is load-balancer
+          predicates:                           # if we have multiple controllers in one microservice i.e. multiple
+            - Path=/rating/**                   # API exposed then we can define the paths in below manner -
+                                                # - Path=/rating/**,/staffs/**
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:                                    # this property will tell our microservice ki kis server ke
+      defaultZone: http://localhost:8761/eureka     # paas jake register hona hai.
