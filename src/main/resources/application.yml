@@ -22,11 +22,16 @@ spring:
           predicates:                           # if we have multiple controllers in one microservice i.e. multiple
             - Path=/rating/**                   # API exposed then we can define the paths in below manner -
                                                 # - Path=/rating/**,/staffs/**
-eureka:
-  instance:
-    prefer-ip-address: true
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:                                    # this property will tell our microservice ki kis server ke
-      defaultZone: http://localhost:8761/eureka     # paas jake register hona hai.
+
+  config:                                       # this propes is used to connect to the config-server
+    import: optional:configserver:http://localhost:9094
+
+# Below props are configured in config-files which can be fetched using config-server.
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#  client:
+#    register-with-eureka: true
+#    fetch-registry: true
+#    service-url:                                    # this property will tell our microservice ki kis server ke
+#      defaultZone: http://localhost:8761/eureka     # paas jake register hona hai.
